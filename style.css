@@ -1,89 +1,77 @@
 body{
-    font-family: Arial;
-    margin:0;
-    padding:0;
-    background:#f5f5f5;
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#f5f5f5;
 }
 
 /* Header */
 .header{
-    background:red;
-    color:white;
-    text-align:center;
-    padding:15px;
-    font-size:28px;
-    font-weight:bold;
+  background:red;
+  color:white;
+  text-align:center;
+  padding:25px;
 }
+.header h1{margin:0;}
 
 /* Menu */
 .menu{
-    background:black;
-    text-align:center;
-    padding:10px;
+  background:#000080;
+  text-align:center;
+  padding:12px;
 }
-
 .menu a{
-    color:white;
-    margin:10px;
-    text-decoration:none;
-    font-weight:bold;
+  color:white;
+  margin:0 15px;
+  text-decoration:none;
+  font-weight:bold;
 }
+.menu a:hover{text-decoration:underline;}
+
+/* Top Links */
+.top-links{display:flex;flex-wrap:wrap;}
+.link{
+  flex:25%;
+  padding:15px;
+  text-align:center;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+.link:hover{opacity:0.9;}
+.red{background:red;}
+.blue{background:blue;}
+.green{background:green;}
+.orange{background:orange;}
 
 /* Container */
-.container{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    margin:10px;
+.container{display:flex;flex-wrap:wrap;padding:10px;}
+.box{flex:33%;padding:10px;}
+.box h2{background:#eee;padding:10px;margin:0;border-left:5px solid red;}
+ul{
+background:white;
+margin:0;
+padding:15px;
+border:1px solid #ccc;
+height:260px;
+overflow-y:auto;
 }
+li{margin-bottom:8px;}
+li a{text-decoration:none;color:#333;}
+li a:hover{color:red;}
 
-/* Box */
-.box{
-    width:30%;
-    background:white;
-    margin:10px;
-    border:2px solid red;
+/* Search Bar */
+.search-bar{
+  display:flex;
+  justify-content:flex-end;
+  padding:10px;
 }
+.search-bar input{padding:6px;border:1px solid #ccc;border-radius:4px 0 0 4px;outline:none;}
+.search-bar button{padding:6px 10px;border:1px solid #ccc;border-left:none;background:#eee;cursor:pointer;}
+.search-bar button:hover{background:#ddd;}
 
-/* Box Heading */
-.box h3{
-    background:red;
-    color:white;
-    margin:0;
-    padding:10px;
-    text-align:center;
-}
-
-/* List */
-.box ul{
-    padding:10px;
-}
-
-.box ul li{
-    margin-bottom:8px;
-}
-
-/* Links */
-.box ul li a{
-    text-decoration:none;
-    color:blue;
-}
-
-/* Button */
-.btn{
-    display:block;
-    background:#007bff;
-    color:white;
-    text-align:center;
-    padding:8px;
-    margin:10px;
-    border-radius:5px;
-    text-decoration:none;
-}
-
-/* Mobile Responsive */
+/* Mobile */
 @media(max-width:768px){
-    .box{
-        width:100%;
-    }
+  .box{flex:100%;}
+  .link{flex:50%;}
+  .search-bar{justify-content:center;margin-top:10px;}
 }
