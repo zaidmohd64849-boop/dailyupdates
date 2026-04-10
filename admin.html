@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Admin Panel</title>
 
 <style>
-
 body{
 font-family:Arial;
 background:#f2f2f2;
@@ -18,28 +16,38 @@ padding:20px;
 .container{
 background:white;
 padding:20px;
-border-radius:8px;
+border-radius:10px;
 max-width:600px;
 margin:auto;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
 input,textarea,select{
 width:100%;
 padding:10px;
 margin-top:10px;
+border:1px solid #ccc;
+border-radius:5px;
 }
 
 button{
-padding:8px 12px;
+padding:10px;
 margin-top:10px;
 cursor:pointer;
+background:#000080;
+color:white;
+border:none;
+border-radius:5px;
+}
+
+button:hover{
+background:#0000aa;
 }
 
 .post{
 border-bottom:1px solid #ddd;
 padding:10px 0;
 }
-
 </style>
 
 </head>
@@ -47,14 +55,13 @@ padding:10px 0;
 <body>
 
 <script>
-
+// ⚠️ Basic protection (NOT fully secure)
 let password = prompt("Enter Admin Password");
 
-if(password !== "daily updates 2000"){
+if(password !== "admin123"){
 alert("Access Denied");
 window.location.href="index.html";
 }
-
 </script>
 
 <div class="container">
@@ -62,27 +69,19 @@ window.location.href="index.html";
 <h2>Add New Post</h2>
 
 <input type="text" id="title" placeholder="Post Title">
-
-<textarea id="article" placeholder="Write Full Article Here (HTML allowed)" rows="10"></textarea>
-
-<input type="text" id="link" placeholder="Download / Official Link">
+<textarea id="article" placeholder="Write Full Article Here" rows="8"></textarea>
+<input type="text" id="link" placeholder="Download Link">
 
 <select id="category">
-
 <option value="jobs">Latest Jobs</option>
-
 <option value="admit">Admit Card</option>
-
 <option value="result">Results</option>
-
-<option value="more information">More Information</option>
-
+<option value="more information">More Info</option>
 </select>
 
 <button onclick="addPost()">Add Post</button>
 
 <h2>All Posts</h2>
-
 <div id="postList"></div>
 
 </div>
@@ -90,92 +89,91 @@ window.location.href="index.html";
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-apiKey: "AIzaSyDBSS9bPh6oXLKIzUHrhqjXzGXWz-2ecTU",
-authDomain: "daily-updates-f1147.firebaseapp.com",
-projectId: "daily-updates-f1147",
-storageBucket: "daily-updates-f1147.firebasestorage.app",
-messagingSenderId: "831611220658",
-appId: "1:831611220658:web:9d9356dbd1c142d93ecfab"
+apiKey: "YOUR_API_KEY",
+authDomain: "YOUR_DOMAIN",
+projectId: "YOUR_PROJECT_ID",
 };
 
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
 
+// ADD POST
 window.addPost = async function(){
 
-let title = document.getElementById("title").value;
-
-let article = document.getElementById("article").value;
-
-let link = document.getElementById("link").value;
-
+let title = document.getElementById("title").value.trim();
+let article = document.getElementById("article").value.trim();
+let link = document.getElementById("link").value.trim();
 let category = document.getElementById("category").value;
 
-if(title === "" || article === "" || link === ""){
-
+if(!title || !article || !link){
 alert("Fill all fields");
-
 return;
-
 }
 
+try{
 await addDoc(collection(db,"posts"),{
-
-title:title,
-
-article:article,
-
-link:link,
-
-category:category,
-
+title,
+article,
+link,
+category,
 date:new Date()
-
 });
 
-alert("Post Added");
-
+alert("Post Added Successfully");
 location.reload();
 
+}catch(e){
+alert("Error adding post");
+console.error(e);
+}
 }
 
+// LOAD POSTS
 async function loadPosts(){
 
 let list = document.getElementById("postList");
+list.innerHTML="Loading...";
+
+try{
+const querySnapshot = await getDocs(collection(db,"posts"));
 
 list.innerHTML="";
 
-const querySnapshot = await getDocs(collection(db,"posts"));
-
 querySnapshot.forEach((docSnap)=>{
-
 let data = docSnap.data();
 
-list.innerHTML += `
-<div class="post">
-${data.title}
-<br>
+let div = document.createElement("div");
+div.className = "post";
+
+div.innerHTML = `
+<b>${data.title}</b><br>
 <button onclick="deletePost('${docSnap.id}')">Delete</button>
-</div>
 `;
 
+list.appendChild(div);
 });
 
+}catch(e){
+list.innerHTML="Error loading posts";
+}
 }
 
+// DELETE
 window.deletePost = async function(id){
 
+if(!confirm("Delete this post?")) return;
+
+try{
 await deleteDoc(doc(db,"posts",id));
-
-alert("Post Deleted");
-
+alert("Deleted");
 loadPosts();
 
+}catch(e){
+alert("Error deleting");
+}
 }
 
 loadPosts();
