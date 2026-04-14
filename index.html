@@ -53,8 +53,6 @@
   </div>
 
 </div>
-
-<script type="module" src="script.js"></script>
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -70,30 +68,44 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 async function loadPosts(){
-let container = document.getElementById("posts");
-container.innerHTML = "Loading...";
 
 const querySnapshot = await getDocs(collection(db,"posts"));
 
-container.innerHTML = "";
+// Clear lists
+document.getElementById("jobsList").innerHTML = "";
+document.getElementById("admitList").innerHTML = "";
+document.getElementById("resultList").innerHTML = "";
+document.getElementById("moreinformationList").innerHTML = "";
 
 querySnapshot.forEach((doc)=>{
 let data = doc.data();
 
-let div = document.createElement("div");
-div.innerHTML = `
-<h3>${data.title}</h3>
-<p>${data.article}</p>
-<a href="${data.link}" target="_blank">Download</a>
-<hr>
+let li = document.createElement("li");
+
+li.innerHTML = `
+<a href="${data.link}" target="_blank">${data.title}</a>
 `;
 
-container.appendChild(div);
+// Category wise add
+if(data.category === "jobs"){
+document.getElementById("jobsList").appendChild(li);
+}
+else if(data.category === "admit"){
+document.getElementById("admitList").appendChild(li);
+}
+else if(data.category === "result"){
+document.getElementById("resultList").appendChild(li);
+}
+else{
+document.getElementById("moreinformationList").appendChild(li);
+}
+
 });
+
 }
 
 loadPosts();
 
-  </script>
+</script>
 </body>
 </html>
